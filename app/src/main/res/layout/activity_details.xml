@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_details"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.juliazluo.www.mdbsocials.DetailsActivity">
+
+    <ImageView
+        android:layout_width="203dp"
+        android:layout_height="188dp"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:id="@+id/image_detail"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintVertical_bias="0.13" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/name_detail"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/image_detail"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/email_detail"
+        app:layout_constraintTop_toBottomOf="@+id/name_detail"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="237dp"
+        android:layout_height="75dp"
+        android:contentDescription="@string/appbar_scrolling_view_behavior"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/email_detail"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:maxLines="4"
+        android:id="@+id/description_detail" />
+
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/num_interested_btn"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/description_detail"
+        app:layout_constraintLeft_toLeftOf="@+id/description_detail" />
+
+    <ToggleButton
+        android:text="ToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/interested_toggle"
+        tools:text="Interested"
+        android:checked="false"
+        android:textOff="@string/interested_btn"
+        android:textOn="@string/not_interested_btn"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/description_detail"
+        app:layout_constraintRight_toRightOf="@+id/description_detail" />
+</android.support.constraint.ConstraintLayout>
