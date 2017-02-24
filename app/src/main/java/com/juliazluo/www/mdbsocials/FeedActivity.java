@@ -57,6 +57,45 @@ public class FeedActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.i("User", "onAuthStateChanged:signed_in:" + user.getUid());
+                    /*ref.addChildEventListener(new ChildEventListener() {
+
+                        @Override
+                        public void onChildAdded(DataSnapshot snapshot, String s) {
+                            String id = snapshot.getKey();
+                            Log.i("Got", id);
+                            String name = snapshot.child("name").getValue(String.class);
+                            Log.i("Got", name);
+                            String email = snapshot.child("email").getValue().toString();
+                            Log.i("Got", email);
+                            long numRSVP = (Long) snapshot.child("numRSVP").getValue();
+                            Log.i("Got", numRSVP + "");
+                            String imageName = snapshot.child("imageName").getValue().toString();
+                            Social social = new Social(id, name, email, numRSVP, imageName);
+                            Log.i("Got", id + " " + name + " " + email + " " + numRSVP + " " + imageName);
+                            socials.add(social);
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    }); */
                 } else {
                     // User is signed out
                     Log.i("User", "onAuthStateChanged:signed_out");
@@ -71,12 +110,16 @@ public class FeedActivity extends AppCompatActivity {
         RecyclerView recyclerAdapter = (RecyclerView)findViewById(R.id.feed_recycler);
         recyclerAdapter.setLayoutManager(new LinearLayoutManager(this));
         recyclerAdapter.setAdapter(adapter);
+    }
 
-        /*ref.addValueEventListener(new ValueEventListener() {
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
+                socials.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     String id = snapshot.getKey();
                     Log.i("Got", id);
@@ -90,6 +133,7 @@ public class FeedActivity extends AppCompatActivity {
                     Social social = new Social(id, name, email, numRSVP, imageName);
                     socials.add(social);
                     Log.i("Got", id + " " + name + " " + email + " " + numRSVP + " " + imageName);
+                    adapter.notifyDataSetChanged();
                 }
             }
 
@@ -99,53 +143,6 @@ public class FeedActivity extends AppCompatActivity {
                 Log.w("Database", "Failed to read value.", error.toException());
             }
         });
-        adapter.notifyDataSetChanged(); */
-
-        ref.addChildEventListener(new ChildEventListener() {
-
-            @Override
-            public void onChildAdded(DataSnapshot snapshot, String s) {
-                String id = snapshot.getKey();
-                Log.i("Got", id);
-                String name = snapshot.child("name").getValue(String.class);
-                Log.i("Got", name);
-                String email = snapshot.child("email").getValue(String.class);
-                Log.i("Got", email);
-                long numRSVP = snapshot.child("numRSVP").getValue(Long.class);
-                Log.i("Got", numRSVP + "");
-                String imageName = snapshot.child("imageName").getValue(String.class);
-                Social social = new Social(id, name, email, numRSVP, imageName);
-                Log.i("Got", id + " " + name + " " + email + " " + numRSVP + " " + imageName);
-                socials.add(social);
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override

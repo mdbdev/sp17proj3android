@@ -44,7 +44,7 @@ public class NewSocialActivity extends AppCompatActivity {
     static final int REQUEST_GALLERY = 2;
     private Uri dataIn;
     private StorageReference storageRef, specificRef;
-    private DatabaseReference ref;
+    private DatabaseReference socialsListRef, socialDetailsRef;
     private TextView name, description, date;
     private static FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -59,7 +59,9 @@ public class NewSocialActivity extends AppCompatActivity {
 
         storageRef = FirebaseStorage.getInstance().getReference();
         specificRef = FirebaseStorage.getInstance().getReference();
-        ref = FirebaseDatabase.getInstance().getReference("/socialsList");
+        socialsListRef= FirebaseDatabase.getInstance().getReference("/socialsList");
+        socialDetailsRef= FirebaseDatabase.getInstance().getReference("/socialDetails");
+
         mAuth = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -213,10 +215,10 @@ public class NewSocialActivity extends AppCompatActivity {
 
     public void submit() {
         final String nameTxt = name.getText().toString();
-        String descTxt = description.getText().toString();
-        String dateTxt = date.getText().toString();
+        final String descTxt = description.getText().toString();
+        final String dateTxt = date.getText().toString();
 
-        final String id = ref.push().getKey();
+        final String id = socialsListRef.push().getKey();
         specificRef = storageRef.child(id + ".png");
 
         if (dataIn != null) {
@@ -227,10 +229,21 @@ public class NewSocialActivity extends AppCompatActivity {
                             // Get a URL to the uploaded content
                             Log.i("Got", "to image listener");
                             Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                            ref.child(id).child("imageName").setValue(id + ".png");
-                            ref.child(id).child("name").setValue(nameTxt);
-                            ref.child(id).child("email").setValue(user.getEmail());
-                            ref.child(id).child("numRSVP").setValue(new Long(0));
+
+                            //Push data to socials list ref node
+                            socialsListRef.child(id).child("imageName").setValue(id + ".png");
+                            socialsListRef.child(id).child("name").setValue(nameTxt);
+                            socialsListRef.child(id).child("email").setValue(user.getEmail());
+                            socialsListRef.child(id).child("numRSVP").setValue(new Long(0));
+
+                            //Push data to social details ref node
+                            socialDetailsRef.child(id).child("imageName").setValue(id + ".png");
+                            socialDetailsRef.child(id).child("name").setValue(nameTxt);
+                            socialDetailsRef.child(id).child("email").setValue(user.getEmail());
+                            socialDetailsRef.child(id).child("numRSVP").setValue(new Long(0));
+                            socialDetailsRef.child(id).child("description").setValue(descTxt);
+                            socialDetailsRef.child(id).child("date").setValue(dateTxt);
+
                             Intent intent = new Intent(getApplicationContext(), FeedActivity.class);
                             startActivity(intent);
                         }
@@ -247,7 +260,24 @@ public class NewSocialActivity extends AppCompatActivity {
 
         } else {
             Log.i("Got", "Default image used");
-            ref.child(id).child("imageName").setValue("default_icon.png");
+
+
+            //Push data to socials list ref node
+            socialsListRef.child(id).child("imageName").setValue("default_icon.png");
+            socialsListRef.child(id).child("name").setValue(nameTxt);
+            socialsListRef.child(id).child("email").setValue(user.getEmail());
+            socialsListRef.child(id).child("numRSVP").setValue(new Long(0));
+
+            //Push data to social details ref node
+            socialDetailsRef.child(id).child("imageName").setValue("default_icon.png");
+            socialDetailsRef.child(id).child("name").setValue(nameTxt);
+            socialDetailsRef.child(id).child("email").setValue(user.getEmail());
+            socialDetailsRef.child(id).child("numRSVP").setValue(new Long(0));
+            socialDetailsRef.child(id).child("description").setValue(descTxt);
+            socialDetailsRef.child(id).child("date").setValue(dateTxt);
+
+            Intent intent = new Intent(getApplicationContext(), FeedActivity.class);
+            startActivity(intent);
         }
     }
 }

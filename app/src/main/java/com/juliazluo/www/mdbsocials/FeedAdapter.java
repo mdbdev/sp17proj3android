@@ -5,6 +5,7 @@ package com.juliazluo.www.mdbsocials;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,8 +18,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -48,10 +52,36 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
 
     @Override
     public void onBindViewHolder(final CustomViewHolder holder, int position) {
-        Social social = data.get(position);
+        final Social social = data.get(position);
         holder.nameText.setText(social.getName());
-        holder.emailText.setText("Organizer: " + social.getEmail());
-        holder.attendingText.setText("Attending: " + social.getNumRSVP());
+        holder.emailText.setText("Host: " + social.getEmail());
+        holder.attendingText.setText("" + social.getNumRSVP());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, DetailsActivity.class);
+                intent.putExtra("SOCIAL_ID", social.getId());
+                intent.putExtra("IMAGE_NAME", social.getImageName());
+                context.startActivity(intent);
+            }
+        });
+
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        storageRef.child(social.getImageName()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(context)
+                        .load(uri)
+                        .override(150, 150)
+                        .into(holder.image);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.i("Storage", "Couldn't find file");
+            }
+        });
 
         /*
         //haven't taught this yet but essentially it runs separately from the UI
