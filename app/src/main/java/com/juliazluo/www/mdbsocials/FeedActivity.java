@@ -10,6 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,8 +38,8 @@ public class FeedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
         Log.i("Got", "here");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -57,45 +60,6 @@ public class FeedActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.i("User", "onAuthStateChanged:signed_in:" + user.getUid());
-                    /*ref.addChildEventListener(new ChildEventListener() {
-
-                        @Override
-                        public void onChildAdded(DataSnapshot snapshot, String s) {
-                            String id = snapshot.getKey();
-                            Log.i("Got", id);
-                            String name = snapshot.child("name").getValue(String.class);
-                            Log.i("Got", name);
-                            String email = snapshot.child("email").getValue().toString();
-                            Log.i("Got", email);
-                            long numRSVP = (Long) snapshot.child("numRSVP").getValue();
-                            Log.i("Got", numRSVP + "");
-                            String imageName = snapshot.child("imageName").getValue().toString();
-                            Social social = new Social(id, name, email, numRSVP, imageName);
-                            Log.i("Got", id + " " + name + " " + email + " " + numRSVP + " " + imageName);
-                            socials.add(social);
-                            adapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    }); */
                 } else {
                     // User is signed out
                     Log.i("User", "onAuthStateChanged:signed_out");
@@ -110,30 +74,61 @@ public class FeedActivity extends AppCompatActivity {
         RecyclerView recyclerAdapter = (RecyclerView)findViewById(R.id.feed_recycler);
         recyclerAdapter.setLayoutManager(new LinearLayoutManager(this));
         recyclerAdapter.setAdapter(adapter);
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot snapshot, String s) {
+                if (snapshot.child("name") != null && snapshot.child("email") != null &&
+                        snapshot.child("numRSVP") != null && snapshot.child("imageName") != null) {
+                    String id = snapshot.getKey();
+                    String name = snapshot.child("name").getValue(String.class);
+                    String email = snapshot.child("email").getValue(String.class);
+                    long numRSVP = snapshot.child("numRSVP").getValue(Long.class);
+                    String imageName = snapshot.child("imageName").getValue(String.class);
+                    Social social = new Social(id, name, email, numRSVP, imageName);
+                    socials.add(social);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        /*ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 socials.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                    String id = snapshot.getKey();
-                    Log.i("Got", id);
-                    String name = snapshot.child("name").getValue(String.class);
-                    Log.i("Got", name);
-                    String email = snapshot.child("email").getValue(String.class);
-                    Log.i("Got", email);
-                    long numRSVP = snapshot.child("numRSVP").getValue(Long.class);
-                    Log.i("Got", numRSVP + "");
-                    String imageName = snapshot.child("imageName").getValue(String.class);
-                    Social social = new Social(id, name, email, numRSVP, imageName);
-                    socials.add(social);
-                    Log.i("Got", id + " " + name + " " + email + " " + numRSVP + " " + imageName);
-                    adapter.notifyDataSetChanged();
+                    if (snapshot.child("name") != null && snapshot.child("email") != null &&
+                            snapshot.child("numRSVP") != null && snapshot.child("imageName") != null) {
+                        String id = snapshot.getKey();
+                        String name = snapshot.child("name").getValue(String.class);
+                        String email = snapshot.child("email").getValue(String.class);
+                        long numRSVP = snapshot.child("numRSVP").getValue(Long.class);
+                        String imageName = snapshot.child("imageName").getValue(String.class);
+                        Social social = new Social(id, name, email, numRSVP, imageName);
+                        socials.add(social);
+                        adapter.notifyDataSetChanged();
+                    }
                 }
             }
 
@@ -142,7 +137,13 @@ public class FeedActivity extends AppCompatActivity {
                 // Failed to read value
                 Log.w("Database", "Failed to read value.", error.toException());
             }
-        });
+        });*/
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
@@ -150,6 +151,25 @@ public class FeedActivity extends AppCompatActivity {
         super.onStop();
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.log_out:
+                mAuth.signOut();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
