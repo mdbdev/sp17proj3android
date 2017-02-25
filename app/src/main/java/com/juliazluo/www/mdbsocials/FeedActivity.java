@@ -25,6 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 
 public class FeedActivity extends AppCompatActivity {
 
@@ -32,6 +35,7 @@ public class FeedActivity extends AppCompatActivity {
     private FeedAdapter adapter;
     private DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/socialsList");
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private HashMap<String, Social> socialHashMap;
     private static FirebaseAuth mAuth;
 
     @Override
@@ -70,6 +74,7 @@ public class FeedActivity extends AppCompatActivity {
         };
 
         socials = new ArrayList<>();
+        socialHashMap = new HashMap<>();
         adapter = new FeedAdapter(getApplicationContext(), socials);
         RecyclerView recyclerAdapter = (RecyclerView)findViewById(R.id.feed_recycler);
         recyclerAdapter.setLayoutManager(new LinearLayoutManager(this));
@@ -86,15 +91,22 @@ public class FeedActivity extends AppCompatActivity {
                     String email = snapshot.child("email").getValue(String.class);
                     long numRSVP = snapshot.child("numRSVP").getValue(Long.class);
                     String imageName = snapshot.child("imageName").getValue(String.class);
-                    Social social = new Social(id, name, email, numRSVP, imageName);
+                    long timestamp = snapshot.child("timestamp").getValue(Long.class);
+                    Social social = new Social(id, name, email, numRSVP, imageName, timestamp);
+                    socialHashMap.put(id, social);
                     socials.add(social);
+                    Collections.sort(socials);
                     adapter.notifyDataSetChanged();
                 }
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+            public void onChildChanged(DataSnapshot snapshot, String s) {
+                String id = snapshot.getKey();
+                long numRSVP = snapshot.child("numRSVP").getValue(Long.class);
+                Social changedSocial = socialHashMap.get(id);
+                changedSocial.setNumRSVP(numRSVP);
+                adapter.notifyDataSetChanged();
             }
 
             @Override

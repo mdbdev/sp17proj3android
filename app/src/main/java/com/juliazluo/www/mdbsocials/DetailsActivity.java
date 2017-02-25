@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    private DatabaseReference ref;
+    private DatabaseReference detailsRef, socialsListRef;
     private StorageReference storageRef;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private static FirebaseAuth mAuth;
@@ -53,7 +53,8 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        ref = FirebaseDatabase.getInstance().getReference("/socialDetails");
+        detailsRef = FirebaseDatabase.getInstance().getReference("/socialDetails");
+        socialsListRef = FirebaseDatabase.getInstance().getReference("/socialsList");
         storageRef = FirebaseStorage.getInstance().getReference();
         name = (TextView) findViewById(R.id.name_detail);
         email = (TextView) findViewById(R.id.email_detail);
@@ -127,7 +128,7 @@ public class DetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         id = intent.getStringExtra("SOCIAL_ID");
         String imageName = intent.getStringExtra("IMAGE_NAME");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        detailsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 name.setText(dataSnapshot.child(id).child("name").getValue(String.class));
@@ -169,21 +170,23 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void incrementInterested() {
         if (firebaseUser != null) {
-            ref.child(id).child("usersRSVP").child(firebaseUser.getUid()).child("userName").setValue(displayName);
-            ref.child(id).child("usersRSVP").child(firebaseUser.getUid()).child("userImage").setValue(profileUri.toString());
+            detailsRef.child(id).child("usersRSVP").child(firebaseUser.getUid()).child("userName").setValue(displayName);
+            detailsRef.child(id).child("usersRSVP").child(firebaseUser.getUid()).child("userImage").setValue(profileUri.toString());
         }
         numInterested += 1;
-        ref.child(id).child("numRSVP").setValue(numInterested);
+        detailsRef.child(id).child("numRSVP").setValue(numInterested);
+        socialsListRef.child(id).child("numRSVP").setValue(numInterested);
         numInterestedBtn.setText(numInterested + " Interested");
         interestedBtn.setText("Not interested");
     }
 
     private void decrementInterested() {
         if (firebaseUser != null) {
-            ref.child(id).child("usersRSVP").child(firebaseUser.getUid()).removeValue();
+            detailsRef.child(id).child("usersRSVP").child(firebaseUser.getUid()).removeValue();
         }
         numInterested -= 1;
-        ref.child(id).child("numRSVP").setValue(numInterested);
+        detailsRef.child(id).child("numRSVP").setValue(numInterested);
+        socialsListRef.child(id).child("numRSVP").setValue(numInterested);
         numInterestedBtn.setText(numInterested + " Interested");
         interestedBtn.setText("Interested");
     }
@@ -195,9 +198,10 @@ public class DetailsActivity extends AppCompatActivity {
         final ArrayList<User> users = new ArrayList<>();
         final PopupAdapter adapter = new PopupAdapter(getApplicationContext(), users);
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        detailsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                TextView textView = (TextView) popupView.findViewById(R.id.popup_text);
                 if (dataSnapshot.child(id).child("usersRSVP").hasChildren()) {
                     for (DataSnapshot snapshot : dataSnapshot.child(id).child("usersRSVP").getChildren()) {
                         String userName = snapshot.child("userName").getValue(String.class);
@@ -206,9 +210,11 @@ public class DetailsActivity extends AppCompatActivity {
                         users.add(newUser);
                     }
                     adapter.notifyDataSetChanged();
-                    ((TextView) popupView.findViewById(R.id.popup_text)).setText("");
+                    textView.setText("");
+                    textView.setHeight(0);
                 } else {
                     ((TextView) popupView.findViewById(R.id.popup_text)).setText("No users interested yet");
+                    ((TextView) popupView.findViewById(R.id.popup_text)).setHeight(120);
                 }
             }
 

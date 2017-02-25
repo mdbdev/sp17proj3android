@@ -4,20 +4,19 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/interested_recycler" />
+
     <TextView
         android:text="TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/popup_text"
         android:textSize="16sp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="16dp"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/interested_recycler" />
+        android:layout_marginLeft="16dp"
+        android:gravity="center_vertical"/>
 
     <Button
         android:text="Back"

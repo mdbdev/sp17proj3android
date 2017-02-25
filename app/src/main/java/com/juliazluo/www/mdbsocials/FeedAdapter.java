@@ -55,7 +55,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         final Social social = data.get(position);
         holder.nameText.setText(social.getName());
         holder.emailText.setText("Host: " + social.getEmail());
-        holder.attendingText.setText("RSVP: " + social.getNumRSVP());
+        holder.attendingText.setText(social.getNumRSVP() + "");
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

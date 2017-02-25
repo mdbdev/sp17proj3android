@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -235,6 +236,7 @@ public class NewSocialActivity extends AppCompatActivity {
                             socialsListRef.child(id).child("name").setValue(nameTxt);
                             socialsListRef.child(id).child("email").setValue(user.getEmail());
                             socialsListRef.child(id).child("numRSVP").setValue(new Long(0));
+                            socialsListRef.child(id).child("timestamp").setValue(ServerValue.TIMESTAMP);
 
                             //Push data to social details ref node
                             socialDetailsRef.child(id).child("imageName").setValue(id + ".png");
@@ -267,6 +269,7 @@ public class NewSocialActivity extends AppCompatActivity {
             socialsListRef.child(id).child("name").setValue(nameTxt);
             socialsListRef.child(id).child("email").setValue(user.getEmail());
             socialsListRef.child(id).child("numRSVP").setValue(new Long(0));
+            socialsListRef.child(id).child("timestamp").setValue(ServerValue.TIMESTAMP);
 
             //Push data to social details ref node
             socialDetailsRef.child(id).child("imageName").setValue("default_icon.png");
