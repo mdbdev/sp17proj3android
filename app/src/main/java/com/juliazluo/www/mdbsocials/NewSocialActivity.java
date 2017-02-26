@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -256,6 +257,14 @@ public class NewSocialActivity extends AppCompatActivity {
                             // Handle unsuccessful uploads
                             Log.i("Got", "failed upload " + exception.getMessage());
                             Toast.makeText(NewSocialActivity.this, "Image upload failed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            int progress = (int) ((100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
+                            Toast.makeText(NewSocialActivity.this, "Photo upload is " + progress + "% done",
                                     Toast.LENGTH_SHORT).show();
                         }
                     });

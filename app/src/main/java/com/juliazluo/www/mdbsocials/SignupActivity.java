@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -74,7 +75,9 @@ public class SignupActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                mAuth.signOut();
+                                mAuth.signOut(); //DUE TO BUG IN FIREBASE in loading displayname and image right after registration
+                                Toast.makeText(SignupActivity.this, "Success! Please log in with your new account",
+                                        Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(intent);
                             }
@@ -212,6 +215,14 @@ public class SignupActivity extends AppCompatActivity {
                             // Handle unsuccessful uploads
                             Log.i("Got", "failed upload " + exception.getMessage());
                             Toast.makeText(SignupActivity.this, "Image upload failed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            int progress = (int) ((100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
+                            Toast.makeText(SignupActivity.this, "Photo upload is " + progress + "% done",
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
