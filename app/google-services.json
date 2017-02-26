@@ -1,0 +1,66 @@
+{
+  "project_info": {
+    "project_number": "611317746226",
+    "firebase_url": "https://mdbsocials-8cbc0.firebaseio.com",
+    "project_id": "mdbsocials-8cbc0",
+    "storage_bucket": "mdbsocials-8cbc0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:611317746226:android:6cbea754ccdaf04c",
+        "android_client_info": {
+          "package_name": "com.example.adhirajdatar.mdbsocials"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "611317746226-tdmbnrc8o253l1d4jqj1qm0cacr5mh9n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.adhirajdatar.mdbsocials",
+            "certificate_hash": "c0769d44fad38d3f70d2e1943ac41688c92dd43b"
+          }
+        },
+        {
+          "client_id": "611317746226-ooth3jv31t27qbj5ve4vf8sph1msommt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.adhirajdatar.mdbsocials",
+            "certificate_hash": "1e4159803a9de2961933d282b2ca7abc0e74a83e"
+          }
+        },
+        {
+          "client_id": "611317746226-g3qb5tbhuuv27ltjnm7rok0p5btak7f3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzZD6qtqr5l7kFUiYnG0puoUpBmcbeWXQ"
+        },
+        {
+          "current_key": "AIzaSyCX5F7GSCjToEMY8h4jbPhv6lzaTMagkQY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "611317746226-g3qb5tbhuuv27ltjnm7rok0p5btak7f3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
